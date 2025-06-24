@@ -31,17 +31,17 @@ jobs:
         run: |
           # Create S3 bucket for Terraform state
           aws s3api create-bucket \
-            --bucket terraform-state-spring-boot-app \
+            --bucket terraform-state-spring-boot-app-marianf \
             --region us-east-1
           
           # Enable bucket versioning
           aws s3api put-bucket-versioning \
-            --bucket terraform-state-spring-boot-app \
+            --bucket terraform-state-spring-boot-app-marianf \
             --versioning-configuration Status=Enabled
           
           # Enable default encryption
           aws s3api put-bucket-encryption \
-            --bucket terraform-state-spring-boot-app \
+            --bucket terraform-state-spring-boot-app-marianf \
             --server-side-encryption-configuration '{
               "Rules": [
                 {

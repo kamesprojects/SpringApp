@@ -9,7 +9,7 @@ env:
   ECS_CLUSTER: spring-boot-app-cluster    # Should match cluster name in terraform
   ECS_SERVICE: spring-boot-app-service    # Should match service name in terraform
   TASK_DEFINITION: task-definition.json
-
+  S3_BUCKET: terraform-state-spring-boot-app-marianf
 jobs:
   terraform:
     name: "Terraform Infrastructure"
@@ -31,17 +31,17 @@ jobs:
         run: |
           # Create S3 bucket for Terraform state
           aws s3api create-bucket \
-            --bucket terraform-state-spring-boot-app-marianf \
+            --bucket {{ env.S3_BUCKET }} \
             --region us-east-1
           
           # Enable bucket versioning
           aws s3api put-bucket-versioning \
-            --bucket terraform-state-spring-boot-app-marianf \
+            --bucket {{ env.S3_BUCKET }} \
             --versioning-configuration Status=Enabled
           
           # Enable default encryption
           aws s3api put-bucket-encryption \
-            --bucket terraform-state-spring-boot-app-marianf \
+            --bucket {{ env.S3_BUCKET }} \
             --server-side-encryption-configuration '{
               "Rules": [
                 {

@@ -9,7 +9,7 @@ env:
   ECS_CLUSTER: spring-boot-app-cluster    # Should match cluster name in terraform
   ECS_SERVICE: spring-boot-app-service    # Should match service name in terraform
   TASK_DEFINITION: task-definition.json
-
+  S3_BUCKET: terraform-state-spring-boot-app-marianf
 jobs:
   terraform:
     name: "Terraform Infrastructure"
@@ -70,7 +70,7 @@ jobs:
 
       - name: Delete S3 bucket (Terraform State)
         run: |
-          bucket=terraform-state-spring-boot-app
+          bucket={{ env.S3_BUCKET }}
           token=""
           
           while : ; do
@@ -91,7 +91,7 @@ jobs:
             token=$(jq -r '.NextToken // empty' <<<"$resp")
             [ -z "$token" ] && break
           done
-          aws s3 rb s3://terraform-state-spring-boot-app --force
+          aws s3 rb s3://{{ env.S3_BUCKET }} --force
           
   build:
     name: "Build"

@@ -5,7 +5,7 @@ on:
 
 env:
   AWS_REGION: us-east-1
-  S3_BUCKET: terraform-state-spring-boot-app
+  S3_BUCKET: terraform-state-spring-boot-app-marianf
   ECR_REPOSITORY: spring-boot-app
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
 
       - name: Delete S3 bucket (Terraform State)
         run: |
-          bucket=terraform-state-spring-boot-app-marianf
+          bucket={{ env.S3_BUCKET }}
           token=""
           
           while : ; do

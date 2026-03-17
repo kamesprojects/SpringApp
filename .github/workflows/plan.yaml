@@ -36,18 +36,20 @@ jobs:
         run: |
           # Create S3 bucket for Terraform state
           aws s3api create-bucket \
-            --bucket terraform-state-spring-boot-app \
+            --bucket ${{ env.S3_BUCKET }} \
             --region us-east-1
           
           # Enable bucket versioning
           aws s3api put-bucket-versioning \
-            --bucket terraform-state-spring-boot-app \
+            --bucket ${{ env.S3_BUCKET }} \
             --versioning-configuration Status=Enabled
           
           # Enable default encryption
           aws s3api put-bucket-encryption \
-            --bucket terraform-state-spring-boot-app \
-            --server-side-encryption-configuration '{
+            --bucket ${{ env.S3_BUCKET }} \
+            --server-side-encryption-configuration \
+            \ '{
+               "
               "Rules": [
                 {
                   "ApplyServerSideEncryptionByDefault": {
@@ -70,7 +72,7 @@ jobs:
 
       - name: Delete S3 bucket (Terraform State)
         run: |
-          bucket={{ env.S3_BUCKET }}
+          bucket="$S3_BUCKET"
           token=""
           
           while : ; do
@@ -91,7 +93,7 @@ jobs:
             token=$(jq -r '.NextToken // empty' <<<"$resp")
             [ -z "$token" ] && break
           done
-          aws s3 rb s3://{{ env.S3_BUCKET }} --force
+          aws s3 rb "s3://$bucket" --force
           
   build:
     name: "Build"

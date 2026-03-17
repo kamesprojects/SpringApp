@@ -44,7 +44,7 @@ jobs:
 
       - name: Delete S3 bucket (Terraform State)
         run: |
-          bucket={{ env.S3_BUCKET }}
+          bucket="$S3_BUCKET"
           token=""
           
           while : ; do
@@ -65,4 +65,4 @@ jobs:
             token=$(jq -r '.NextToken // empty' <<<"$resp")
             [ -z "$token" ] && break
           done
-          aws s3 rb s3://${{ env.S3_BUCKET }} --force
+          aws s3 rb "s3://$bucket" --force
